@@ -1,13 +1,15 @@
 """
-Accelerated Byzantine-Resilient Consensus for Multi-Agent Systems
+Accelerating Average Consensus in Dynamical Networks 
+Without Compromising Accuracy, Privacy or Resilience
 
-This module implements an accelerated consensus algorithm using private accumulator
-variables and optimized subgraph detection for Byzantine fault tolerance in multi-agent
-systems.
+This implements the accelerated consensus algorithm described in the thesis,
+based on the paper “Accelerating Average Consensus in Dynamical Networks Without 
+Compromising Accuracy, Privacy or Resilience.”
 
-Author: José
+Author: José Moniz
 Date: October 2025
 """
+
 
 import numpy as np
 import itertools
@@ -433,8 +435,8 @@ def run_trials(
     Run batch experiments comparing original vs optimized subgraph detection.
     
     Generates random strongly-connected digraphs, simulates Byzantine consensus
-    with both standard and optimized configurations, and exports comprehensive
-    results including detection times, trajectories, matrices, and visualizations.
+    with both standard and optimized configurations, and exports results including 
+    detection times, trajectories, matrices, and visualizations.
     
     Args:
         N: Number of agents

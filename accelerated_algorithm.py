@@ -650,4 +650,3 @@ if __name__ == '__main__':
     # Run single trial with N=11 agents, f=1 Byzantine agent
     df = run_trials(N=8, p_edge=0.8, f=2, eps=0.15, T=50, seed0=4, trials=1)
     #df = run_trials(N=8, p_edge=0.8, f=1, eps=0.15, T=250, seed0=4, trials=1)
-    print(df.describe())

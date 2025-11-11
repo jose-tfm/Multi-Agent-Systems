@@ -364,21 +364,24 @@ def simulate_resilient_consensus(
                             if (u-1) in surv0 else x0_dict[u]
                         )
                         
-                        # Check for unique outlier among minors (subgraph detection)
-                        outs = []
-                        for j, Fset in enumerate(F_list):
-                            surv_j = surv_idxs[j]
-                            if Fset and u not in Fset and (u-1) in surv_j:
-                                cand = X_store[lab][j][surv_j.index(u-1), k]
-                                if abs(cand-full) >= eps:
-                                    outs.append(cand)
-                        
-                        # If exactly one outlier detected, filter to that minor
-                        if len(outs) == 1:
-                            filters[lab][u][k] = True
-                            val = outs[0]
-                        else:
-                            val = full
+                        # Check for unique outlier by level (subgraph detection)
+                        val = full
+                        for f_level in range(1, f+1):
+                            outs = []
+                            for j, Fset in enumerate(F_list):
+                                if len(Fset) != f_level:
+                                    continue
+                                surv_j = surv_idxs[j]
+                                if u not in Fset and (u-1) in surv_j:
+                                    cand = X_store[lab][j][surv_j.index(u-1), k]
+                                    if abs(cand-full) >= eps:
+                                        outs.append(cand)
+                            
+                            # If exactly one outlier at this level, use it and stop
+                            if len(outs) == 1:
+                                filters[lab][u][k] = True
+                                val = outs[0]
+                                break
                     
                     histories[lab][u][k] = val
                     
@@ -491,9 +494,10 @@ def run_trials(
 
             x0 = {u: np.random.rand() for u in range(1, N+1)}
             if f == 1:
-                attacker = {2: lambda k: 0.8}
+                attacker = {2: lambda k: 0.9}
             elif f == 2:
-                attacker = {2: lambda k: 0.8, 3: lambda k:  1 + 2**(-0.3 * (k+1))}
+                #attacker = {2: lambda k: 0.8, 3: lambda k:  1 + 2**(-0.3 * (k+1))}
+                attacker = {2: lambda k: 0.9}
             else:
                 raise ValueError(f"Unsupported number of attackers: f={f}")
 
@@ -644,5 +648,6 @@ def run_trials(
 
 if __name__ == '__main__':
     # Run single trial with N=11 agents, f=1 Byzantine agent
-    df = run_trials(N=8, p_edge=0.8, f=2, eps=0.15, T=400, seed0=4, trials=1)
+    df = run_trials(N=8, p_edge=0.8, f=2, eps=0.15, T=50, seed0=4, trials=1)
+    #df = run_trials(N=8, p_edge=0.8, f=1, eps=0.15, T=250, seed0=4, trials=1)
     print(df.describe())
